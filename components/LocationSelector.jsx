@@ -1,11 +1,24 @@
 import { StyleSheet, Text, View, Button, Alert } from 'react-native'
-import React,{useState} from 'react'
+import React, { useState, useEffect } from "react";
 import * as Location from 'expo-location'
 import { COLORS } from '../constants'
+import MapPreview from "./MapPreview";
+import { useNavigation } from "@react-navigation/native";
 
 
 const LocationSelector = props => {
+    const navigation = useNavigation();
     const [pickedLocation, setPickedLocation] = useState()
+
+
+ 
+    useEffect(() => {
+        if (props.mapLocation) {
+            setPickedLocation(props.mapLocation)
+            props.onLocation(props.mapLocation)
+      }
+    }, [props.mapLocation])
+    
 
     const verifyPermission = async () => {
         const { status } = await Location.requestForegroundPermissionsAsync()
@@ -31,14 +44,25 @@ const LocationSelector = props => {
             lat: location.coords.latitude,
             lng: location.coords.longitude,
         })
-    }
+    };
+
+    
+  const handlePickOnMap =  () => {
+    const isLocationOK = verifyPermission()
+    if (!isLocationOK) return
+    navigation.navigate("Map");
+  };
+
+
     return (
         <View style={styles.container}>
-            <View style={styles.preview}>
-                {pickedLocation ? (<Text>{pickedLocation.lat}, {pickedLocation.lng}</Text>)
-                    : (<Text> Esperando ubicacion</Text>)}
-            </View>
+            <MapPreview location={pickedLocation} style={styles.preview}>
+        <Text> Location en proceso...</Text>
+      </MapPreview>
+      <View  style={styles.actions}>
             <Button title="obtener ubicacion" color={COLORS.PEACH_PUFF} onPress={handleGetLocation} />
+            <Button title="Elegir del mapa" color={COLORS.PEACH_PUFF} onPress={handlePickOnMap} />
+            </View>
         </View>
     )
 }
@@ -59,5 +83,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderColor: COLORS.BLUSH,
         borderWidth: 1,
-    }
+    },
+    actions: {
+        flexDirection: "row",
+        justifyContent: "space-around",
+      },
 })

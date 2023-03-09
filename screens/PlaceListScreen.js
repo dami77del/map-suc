@@ -5,8 +5,16 @@ import PlaceItem from '../components/PlaceItem'
 
 const PlaceListScreen = ({navigation}) => {
 const places = useSelector(state => state.places.places)
+
 const renderItem = ({item}) =>(
-    <PlaceItem title={item.title} image={item.image}address='123 cirty' onSelect={() => navigation.navigate('Detalle')}/>
+    <PlaceItem 
+    title={item.title} 
+    image={item.image}
+    address={item.address}
+    onSelect={() => navigation.navigate('Detalle', {
+        placeId: item.id
+    })}
+    />
 )
 
   
