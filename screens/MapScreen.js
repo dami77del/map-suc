@@ -30,7 +30,7 @@ const MapScreen = ({navigation}) => {
     navigation.setOptions({
       headerRight: () => (
         <TouchableOpacity onPress={handleSaveLocation}>
-          <Ionicons name="md-save-outline" color="black" size={22} />
+     <Ionicons name="md-save-outline" color="white" size={24} />
         </TouchableOpacity>
       ),
     });
